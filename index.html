@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tide 플레이어</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<!-- 링크 미리보기 카드 (카카오톡 · 디스코드 · 슬랙 · X 등) -->
+<meta name="description" content="내 YouTube Music을 더 가볍고, 더 깊게. 싱크 가사 · 크로스페이드 · 이퀄라이저 · 미니플레이어 · Tide Party 같이 듣기. Windows용 무료 데스크톱 플레이어.">
+<meta name="theme-color" content="#ff3348">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Tide">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:url" content="https://stellkr.github.io/tide/">
+<meta property="og:title" content="Tide · 내 YouTube Music을 더 가볍고, 더 깊게">
+<meta property="og:description" content="싱크 가사 · 크로스페이드 · 이퀄라이저 · 미니플레이어 · Tide Party 같이 듣기. Windows용 무료 데스크톱 플레이어.">
+<meta property="og:image" content="https://stellkr.github.io/tide/og.jpg?v=3">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Tide 아이콘과 '내 YouTube Music을 더 가볍고, 더 깊게.' 문구">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Tide · 내 YouTube Music을 더 가볍고, 더 깊게">
+<meta name="twitter:description" content="싱크 가사 · 크로스페이드 · 이퀄라이저 · 미니플레이어 · Tide Party 같이 듣기. Windows용 무료 데스크톱 플레이어.">
+<meta name="twitter:image" content="https://stellkr.github.io/tide/og.jpg?v=3">
+<link rel="icon" type="image/png" href="https://stellkr.github.io/tide/icon.png">
+</head>
+<body>
+<style>
+@font-face{font-family:"Pretendard";font-weight:300;font-display:swap;src:url(fonts/pretendard-300.woff) format("woff")}
+@font-face{font-family:"Pretendard";font-weight:400;font-display:swap;src:url(fonts/pretendard-400.woff) format("woff")}
+@font-face{font-family:"Pretendard";font-weight:500;font-display:swap;src:url(fonts/pretendard-500.woff) format("woff")}
+@font-face{font-family:"Pretendard";font-weight:600;font-display:swap;src:url(fonts/pretendard-600.woff) format("woff")}
+@font-face{font-family:"Pretendard";font-weight:700;font-display:swap;src:url(fonts/pretendard-700.woff) format("woff")}
+@font-face{font-family:"Pretendard";font-weight:800;font-display:swap;src:url(fonts/pretendard-800.woff) format("woff")}
+/* 레이아웃: 홍보 배너(promo/banner.html)를 그대로 펼친 페이지. 빨강·주황 빛번짐이 깔린 밤 배경 위에
+   기울어진 앱 화면과 떠 있는 카드들, 그 아래로 같은 유리 카드 언어의 기능 묶음이 이어진다. 배너처럼 어두운 한 가지 분위기로 고정. */
+:root {
+  --bg: #0b0b12;
+  --panel: rgb(22 20 34 / .92);
+  --card: #15131f;
+  --raised: rgb(255 255 255 / .07);
+  --edge: rgb(255 255 255 / .1);
+  --fg: #f4f2fb;
+  --muted: #a4a0b8;
+  --accent: #ff3348;
+  --accent2: #d3002a;
+  --soft: #ff8a96;
+  --pink: #ffb38a;
+  --font: "Pretendard", "Malgun Gothic", "Apple SD Gothic Neo", system-ui, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 16px; line-height: 1.65;
+  -webkit-font-smoothing: antialiased; word-break: keep-all; overflow-x: hidden;
+}
+h1, h2, h3 { margin: 0; text-wrap: balance; letter-spacing: -.02em; }
+p { margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--soft); outline-offset: 3px; border-radius: 8px; }
+.wrap { max-width: 1200px; margin: 0 auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+em.grad, .grad { font-style: normal; background: linear-gradient(90deg, var(--soft), var(--pink)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.label { font-size: 12px; font-weight: 800; letter-spacing: .1em; color: var(--soft); }
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: 999px; background: var(--raised); border: 1px solid rgb(255 255 255 / .09); font-size: 15px; font-weight: 600; white-space: nowrap; }
+.chip b { color: var(--soft); font-weight: 700; }
+.cta { display: inline-flex; align-items: center; gap: 10px; padding: 15px 28px; border-radius: 999px; background: linear-gradient(90deg, var(--accent), var(--accent2)); color: #fff; font-size: 18px; font-weight: 800; text-decoration: none; box-shadow: 0 12px 30px rgb(255 51 72 / .45); transition: transform .2s, box-shadow .2s; }
+.cta:hover { transform: translateY(-2px); box-shadow: 0 18px 40px rgb(255 51 72 / .55); }
+.cta small { font-size: 13px; font-weight: 600; opacity: .85; }
+.float { border-radius: 18px; background: var(--card); border: 1px solid rgb(255 255 255 / .12); box-shadow: 0 24px 60px rgb(0 0 0 / .55); }
+
+/* ── 상단 ── */
+.top { position: absolute; top: 0; left: 0; right: 0; z-index: 5; }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 20px; }
+.mark { display: flex; align-items: center; gap: 10px; font-weight: 900; font-size: 20px; text-decoration: none; letter-spacing: -.5px; }
+.mark svg { width: 32px; height: 32px; border-radius: 9px; }
+.nav { display: flex; align-items: center; gap: 22px; font-size: 14px; color: var(--muted); }
+.nav a { text-decoration: none; }
+.nav a:hover { color: var(--fg); }
+.nav .chip { color: var(--fg); padding: 7px 14px; font-size: 14px; }
+
+/* ── 히어로 = 배너 ── */
+.hero {
+  position: relative; overflow: hidden; padding-block: 120px 110px;
+  background:
+    radial-gradient(circle at 12% 18%, rgb(255 51 72 / .55), transparent 45%),
+    radial-gradient(circle at 92% 95%, rgb(211 0 42 / .55), transparent 50%),
+    radial-gradient(circle at 70% 10%, rgb(255 138 61 / .22), transparent 40%),
+    var(--bg);
+}
+.hero .waves { position: absolute; left: 0; right: 0; bottom: 40px; width: 100%; height: 200px; opacity: .1; }
+.hero-grid { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 40px; align-items: center; }
+.brand { display: flex; align-items: center; gap: 18px; }
+.brand svg { width: 76px; height: 76px; border-radius: 22px; box-shadow: 0 14px 40px rgb(255 51 72 / .55); flex: none; }
+.brand h1 { font-size: 64px; font-weight: 900; letter-spacing: -2px; line-height: 1; }
+.tagline { margin-top: 30px; font-size: clamp(32px, 4vw, 46px); font-weight: 800; line-height: 1.25; letter-spacing: -1px; }
+.sub { margin-top: 16px; font-size: 18px; line-height: 1.6; color: var(--muted); }
+.chips { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 10px; }
+.hero .cta { margin-top: 34px; }
+.note { margin-top: 14px; font-size: 13px; color: var(--muted); }
+
+/* 기울어진 앱 화면 */
+.scene { position: relative; min-height: 520px; }
+.mock {
+  position: absolute; left: 0; top: 40px; width: 640px; height: 470px; border-radius: 22px;
+  background: var(--panel); border: 1px solid var(--edge); box-shadow: 0 40px 90px rgb(0 0 0 / .6);
+  transform: perspective(1400px) rotateY(-12deg) rotateX(4deg); transform-origin: left center; overflow: hidden;
+}
+.mock-top { height: 46px; display: flex; align-items: center; gap: 10px; padding: 0 18px; border-bottom: 1px solid rgb(255 255 255 / .07); }
+.dot { width: 10px; height: 10px; border-radius: 50%; background: rgb(255 255 255 / .18); }
+.search { margin-left: 12px; flex: 1; height: 26px; border-radius: 999px; background: var(--raised); font-size: 12px; color: var(--muted); display: flex; align-items: center; padding: 0 14px; }
+.mock-body { display: flex; height: 330px; }
+.side { width: 130px; flex: none; padding: 16px 12px; border-right: 1px solid rgb(255 255 255 / .06); font-size: 12px; color: var(--muted); display: flex; flex-direction: column; gap: 10px; }
+.side .on { color: var(--soft); font-weight: 700; background: rgb(255 51 72 / .16); border-radius: 8px; padding: 6px 8px; margin: -6px -8px; }
+.main { flex: 1; min-width: 0; padding: 18px 20px; }
+.main h3 { font-size: 17px; font-weight: 800; margin-bottom: 12px; }
+.moods { display: flex; gap: 12px; margin-bottom: 18px; }
+.mood { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; font-weight: 800; color: #fff; flex: none; }
+.cards { display: flex; gap: 12px; }
+.card { width: 96px; flex: none; }
+.art { width: 96px; height: 96px; border-radius: 12px; }
+.card p { margin-top: 7px; font-size: 11px; font-weight: 700; }
+.card span { font-size: 10px; color: var(--muted); }
+.mbar { height: 94px; border-top: 1px solid rgb(255 255 255 / .07); display: flex; align-items: center; gap: 14px; padding: 0 20px; position: relative; }
+.mbar .prog { position: absolute; top: -2px; left: 0; height: 3px; width: 100%; background: rgb(255 255 255 / .12); }
+.mbar .prog i { display: block; height: 100%; width: 42%; background: var(--accent); }
+.mbar .art { width: 52px; height: 52px; border-radius: 10px; }
+.now p { font-size: 14px; font-weight: 800; }
+.now span { font-size: 12px; color: var(--muted); }
+.ctrl { margin-left: auto; margin-right: 40px; display: flex; align-items: center; gap: 16px; color: var(--muted); font-size: 15px; }
+.play { width: 40px; height: 40px; border-radius: 50%; background: var(--fg); color: var(--bg); display: grid; place-items: center; font-size: 14px; }
+.party { position: absolute; right: 0; top: 0; padding: 10px 16px; display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; z-index: 2; }
+.avatars { display: flex; }
+.avatars i { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #12101c; margin-left: -7px; }
+.lyric { position: absolute; left: -60px; bottom: -10px; padding: 16px 22px; width: 310px; z-index: 2; }
+.lyric p { font-size: 13px; color: var(--muted); margin-top: 6px; transition: all .5s; }
+.lyric p.cur { font-size: 18px; color: var(--fg); font-weight: 800; }
+
+/* ── 구간 공통 ── */
+section.blk { position: relative; padding-block: 110px; }
+.head { display: grid; gap: 12px; margin-bottom: 48px; max-width: 640px; }
+.head h2 { font-size: clamp(32px, 4.2vw, 46px); font-weight: 800; line-height: 1.22; letter-spacing: -1px; }
+.head p { color: var(--muted); font-size: 17px; }
+.glow-a { background: radial-gradient(circle at 85% 20%, rgb(255 138 61 / .14), transparent 40%), radial-gradient(circle at 5% 90%, rgb(255 51 72 / .18), transparent 45%), var(--bg); }
+.glow-b { background: radial-gradient(circle at 15% 15%, rgb(211 0 42 / .25), transparent 45%), var(--bg); }
+
+/* 기능 묶음 (배너의 떠 있는 카드 언어) */
+.bento { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 18px; }
+.tile { position: relative; padding: 26px; display: grid; gap: 10px; align-content: start; overflow: hidden; transition: transform .25s, border-color .25s; }
+.tile:hover { transform: translateY(-4px); border-color: rgb(255 138 150 / .35); }
+.tile h3 { font-size: 21px; font-weight: 800; }
+.tile p { color: var(--muted); font-size: 15px; }
+.w3 { grid-column: span 3; } .w2 { grid-column: span 2; } .w4 { grid-column: span 4; }
+.viz { margin-top: 14px; min-height: 120px; display: grid; align-content: center; }
+/* 가사 */
+.v-lyrics p { font-size: 14px; color: var(--muted); }
+.v-lyrics p.cur { font-size: 22px; font-weight: 800; color: var(--fg); margin: 4px 0; }
+.v-lyrics p.cur span { background: linear-gradient(90deg, var(--soft) 62%, var(--fg) 62%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+/* 크로스페이드 */
+.v-fade { position: relative; height: 110px; }
+.v-fade svg { width: 100%; height: 110px; }
+/* EQ */
+.v-eq { display: flex; align-items: end; justify-content: space-between; gap: 6px; height: 120px; padding-inline: 4px; }
+.v-eq i { flex: 1; border-radius: 6px; background: linear-gradient(to top, var(--accent2), var(--soft)); height: var(--h); position: relative; }
+.v-eq i::after { content: ""; position: absolute; left: 50%; top: -6px; width: 14px; height: 14px; margin-left: -7px; border-radius: 50%; background: var(--fg); box-shadow: 0 2px 8px rgb(0 0 0 / .5); }
+/* Tide Party */
+.v-party { display: grid; gap: 10px; }
+.bubble { display: flex; gap: 10px; align-items: center; font-size: 14px; }
+.bubble i { width: 26px; height: 26px; border-radius: 50%; flex: none; }
+.bubble span { padding: 8px 12px; border-radius: 14px 14px 14px 4px; background: var(--raised); }
+.bubble.me { justify-content: flex-end; }
+.bubble.me span { border-radius: 14px 14px 4px 14px; background: rgb(255 51 72 / .28); }
+/* 미니플레이어 */
+.v-mini { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 14px; background: var(--raised); border: 1px solid rgb(255 255 255 / .08); }
+.v-mini .art { width: 48px; height: 48px; border-radius: 10px; flex: none; }
+.v-mini div { min-width: 0; flex: 1; }
+.v-mini b { display: block; font-size: 14px; }
+.v-mini span { font-size: 12px; color: var(--muted); }
+.v-mini .play { width: 34px; height: 34px; font-size: 12px; flex: none; }
+/* 기분 */
+.v-moods { display: flex; flex-wrap: wrap; gap: 10px; }
+.v-moods .mood { width: 60px; height: 60px; font-size: 12px; }
+
+.more { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 10px; }
+
+/* 단축키 */
+.keys { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.key { padding: 18px 18px 16px; display: grid; gap: 12px; }
+kbd { font-family: var(--font); font-size: 13px; font-weight: 700; padding: 5px 10px; border-radius: 8px; background: var(--raised); border: 1px solid rgb(255 255 255 / .14); border-bottom-width: 3px; white-space: nowrap; }
+.caps { display: flex; flex-wrap: wrap; gap: 6px; }
+.key span { font-size: 14px; color: var(--muted); }
+.key.hl { border-color: rgb(255 51 72 / .5); background: linear-gradient(180deg, rgb(255 51 72 / .16), var(--card)); }
+.key.hl span { color: var(--fg); }
+
+/* 설치 + 다운로드 띠 */
+.steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; counter-reset: s; }
+.steps li { counter-increment: s; padding: 26px; display: grid; gap: 10px; align-content: start; }
+.steps li::before { content: counter(s); width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); font-weight: 800; box-shadow: 0 8px 20px rgb(255 51 72 / .4); }
+.steps h3 { font-size: 19px; font-weight: 800; }
+.steps p { color: var(--muted); font-size: 15px; }
+.steps code { font-size: 13px; color: var(--soft); }
+.band {
+  margin-top: 56px; position: relative; overflow: hidden; border-radius: 28px; padding: 48px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px;
+  background: radial-gradient(circle at 10% 0%, rgb(255 51 72 / .6), transparent 55%), radial-gradient(circle at 100% 100%, rgb(255 138 61 / .35), transparent 50%), var(--card);
+  border: 1px solid rgb(255 255 255 / .12);
+}
+.band h2 { font-size: clamp(26px, 3.4vw, 38px); font-weight: 800; line-height: 1.25; letter-spacing: -1px; }
+.band .waves { position: absolute; inset: auto 0 -20px 0; width: 100%; height: 120px; opacity: .12; pointer-events: none; }
+
+/* 알고 쓰기 */
+.trust { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.trust div { padding: 22px; display: grid; gap: 8px; align-content: start; }
+.trust h3 { font-size: 17px; font-weight: 800; line-height: 1.4; }
+.trust p { color: var(--muted); font-size: 14px; }
+
+footer { padding-block: 40px 48px; border-top: 1px solid rgb(255 255 255 / .07); color: rgb(164 160 184 / .8); font-size: 13px; }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px 32px; }
+
+@media (max-width: 1060px) {
+  .hero-grid { grid-template-columns: minmax(0, 1fr); gap: 56px; }
+  .scene { min-height: 0; }
+  .mock { position: relative; top: 0; width: 100%; max-width: 640px; transform: none; }
+  .party { right: 0; top: -22px; }
+  .lyric { left: auto; right: 12px; bottom: -40px; }
+  .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .w2, .w3, .w4 { grid-column: span 1; }
+  .keys { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .trust { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .nav a:not(.chip) { display: none; }
+}
+@media (max-width: 640px) {
+  .brand svg { width: 60px; height: 60px; border-radius: 18px; }
+  .brand h1 { font-size: 52px; }
+  .sub { font-size: 16px; }
+  .chip { font-size: 14px; padding: 8px 13px; }
+  .cta { font-size: 16px; padding: 14px 22px; }
+  .side { display: none; }
+  .mock { height: auto; }
+  .mock-body { height: auto; }
+  .main { padding: 16px; }
+  .moods { gap: 8px; }
+  .mood { width: 44px; height: 44px; font-size: 10px; }
+  .mbar { height: 76px; padding: 0 14px; }
+  .ctrl { margin-right: 0; gap: 10px; }
+  .ctrl .x { display: none; }
+  .lyric { position: relative; left: 0; right: 0; bottom: 0; width: auto; margin-top: 14px; }
+  .party { position: relative; top: 0; display: inline-flex; margin-bottom: 14px; }
+  .bento, .steps, .trust { grid-template-columns: minmax(0, 1fr); }
+  .band { padding: 32px 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .lyric p, .tile, .cta { transition: none; }
+}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="ig" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff5a6a"/><stop offset="1" stop-color="#d3002a"/></linearGradient>
+    <symbol id="icon" viewBox="0 0 32 32">
+      <rect width="32" height="32" rx="7" fill="url(#ig)"/>
+      <path d="M6.4 13.2c1.6-1.8 3.2-1.8 4.8 0s3.2 1.8 4.8 0 3.2-1.8 4.8 0 3.2 1.8 4.8 0" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M6.4 19.2c1.6-1.8 3.2-1.8 4.8 0s3.2 1.8 4.8 0 3.2-1.8 4.8 0 3.2 1.8 4.8 0" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="waves" viewBox="0 0 1200 200" preserveAspectRatio="none">
+      <path d="M0 80 C 150 20, 300 140, 450 80 S 750 20, 900 80 S 1150 140, 1200 80" fill="none" stroke="#ff8a96" stroke-width="3"/>
+      <path d="M0 130 C 150 70, 300 190, 450 130 S 750 70, 900 130 S 1150 190, 1200 130" fill="none" stroke="#ff8a96" stroke-width="3"/>
+    </symbol>
+  </defs>
+</svg>
+
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="#top" aria-label="Tide 처음으로"><svg aria-hidden="true"><use href="#icon"/></svg>Tide</a>
+    <nav class="nav" aria-label="페이지 안 이동">
+      <a href="#features">기능</a>
+      <a href="#keys">단축키</a>
+      <a href="#install">설치</a>
+      <a class="chip" href="#install"><b>⬇</b>다운로드</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <svg class="waves" aria-hidden="true"><use href="#waves"/></svg>
+    <div class="wrap hero-grid">
+      <div>
+        <div class="brand"><svg aria-hidden="true"><use href="#icon"/></svg><h1>Tide</h1></div>
+        <p class="tagline">내 YouTube Music을<br><em class="grad">더 가볍고, 더 깊게.</em></p>
+        <p class="sub">Google 계정 하나로 보관함 · 좋아요 · 추천을 그대로.<br>데스크톱에서 즐기는 나만의 음악 플레이어.</p>
+        <div class="chips">
+          <span class="chip"><b>♪</b>싱크 가사</span>
+          <span class="chip"><b>◐</b>크로스페이드</span>
+          <span class="chip"><b>≋</b>이퀄라이저</span>
+          <span class="chip"><b>▣</b>미니플레이어</span>
+          <span class="chip"><b>◎</b>Tide Party 같이 듣기</span>
+        </div>
+        <a class="cta" id="dl" href="#install">⬇ Windows 무료 다운로드 <small>v0.5</small></a>
+        <p class="note" id="dl-note">공개 다운로드 링크는 준비 중입니다. 지금은 배포자에게 설치 파일을 직접 받아 주세요.</p>
+      </div>
+
+      <div class="scene" aria-label="Tide 앱 화면 예시 (곡 이름은 예시)">
+        <div class="float party"><span style="color: var(--soft)">≋</span> Tide Party · 3명이 같이 듣는 중
+          <span class="avatars"><i style="background:#ff8a3d"></i><i style="background:#22b8f0"></i><i style="background:#2ecf8f"></i></span>
+        </div>
+        <div class="mock">
+          <div class="mock-top"><span class="dot"></span><span class="dot"></span><span class="dot"></span><div class="search">곡, 아티스트, 앨범 검색</div></div>
+          <div class="mock-body">
+            <div class="side">
+              <span class="on">⌂ 홈</span><span>☆ 추천</span><span>◷ 최근 재생</span><span>♡ 좋아요한 음악</span><span>▤ 내 플레이리스트</span><span>▥ 청취 통계</span>
+            </div>
+            <div class="main">
+              <h3>오늘의 기분이 어떠신가요?</h3>
+              <div class="moods">
+                <span class="mood" style="background: radial-gradient(circle at 30% 30%, #ffc531, #8a6a10)">행복</span>
+                <span class="mood" style="background: radial-gradient(circle at 30% 30%, #22b8f0, #0d5370)">차분</span>
+                <span class="mood" style="background: radial-gradient(circle at 30% 30%, #ff4d6d, #7a1f30)">신남</span>
+                <span class="mood" style="background: radial-gradient(circle at 30% 30%, #2ecf8f, #12603f)">집중</span>
+                <span class="mood" style="background: radial-gradient(circle at 30% 30%, #f062c0, #6e2357)">K팝</span>
+              </div>
+              <h3>빠른 선곡</h3>
+              <div class="cards">
+                <div class="card"><div class="art" style="background: linear-gradient(135deg, #ff8a3d, #f062c0)"></div><p>Midnight Drive</p><span>Neon Coast</span></div>
+                <div class="card"><div class="art" style="background: linear-gradient(135deg, #22b8f0, #4c6fff)"></div><p>Ocean Breeze</p><span>Blue Harbor</span></div>
+                <div class="card"><div class="art" style="background: linear-gradient(135deg, #2ecf8f, #22b8f0)"></div><p>Morning Walk</p><span>Green Room</span></div>
+                <div class="card"><div class="art" style="background: linear-gradient(135deg, #ff3348, #ff4d6d)"></div><p>Starlight</p><span>Luna Park</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="mbar">
+            <div class="prog"><i id="mprog"></i></div>
+            <div class="art" style="background: linear-gradient(135deg, #ff3348, #22b8f0)"></div>
+            <div class="now"><p>Waves of Light</p><span>Tide Collective</span></div>
+            <div class="ctrl"><span class="x">⤮</span> ⏮ <span class="play">❚❚</span> ⏭ <span class="x">↻</span></div>
+          </div>
+        </div>
+        <div class="float lyric">
+          <span class="label">LYRICS</span>
+          <div id="lyric"><p>파도 위로 번지는 빛처럼</p><p class="cur">오늘 밤도 너에게 닿기를</p><p>조용히 흘러가는 이 노래</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="blk glow-a" id="features">
+    <div class="wrap">
+      <div class="head">
+        <span class="label">FEATURES</span>
+        <h2>웹에서는 못 하던 것들,<br><em class="grad">Tide에서는 기본.</em></h2>
+        <p>YouTube Music의 곡과 내 보관함을 그대로 쓰면서, 듣는 경험을 더했습니다.</p>
+      </div>
+      <div class="bento">
+        <article class="float tile w4">
+          <span class="label">♪ 싱크 가사</span>
+          <h3>한 줄씩 따라가는 가사</h3>
+          <p>노래방처럼 채워지는 표시, 어긋나면 바로 맞추는 싱크 보정, 바탕화면 위에 띄우는 가사 창까지.</p>
+          <div class="viz v-lyrics" aria-hidden="true"><p>파도 위로 번지는 빛처럼</p><p class="cur"><span>오늘 밤도 너에게 닿기를</span></p><p>조용히 흘러가는 이 노래</p></div>
+        </article>
+        <article class="float tile w2">
+          <span class="label">◎ TIDE PARTY</span>
+          <h3>같은 곡, 같은 순간</h3>
+          <p>방을 만들어 친구와 함께 듣고, 채팅하고, 곡을 신청합니다.</p>
+          <div class="viz v-party" aria-hidden="true">
+            <div class="bubble"><i style="background:#22b8f0"></i><span>이 노래 뭐야 좋다</span></div>
+            <div class="bubble me"><span>다음 곡 추가했어</span></div>
+          </div>
+        </article>
+        <article class="float tile w2">
+          <span class="label">◐ 크로스페이드</span>
+          <h3>끊김 없이 다음 곡으로</h3>
+          <p>곡 끝과 다음 곡 시작을 겹쳐 자연스럽게 넘깁니다.</p>
+          <div class="viz v-fade" aria-hidden="true">
+            <svg viewBox="0 0 300 110" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="fa" x1="0" x2="1"><stop offset="0" stop-color="#ff3348" stop-opacity=".9"/><stop offset="1" stop-color="#ff3348" stop-opacity="0"/></linearGradient>
+                <linearGradient id="fb" x1="0" x2="1"><stop offset="0" stop-color="#ffb38a" stop-opacity="0"/><stop offset="1" stop-color="#ffb38a" stop-opacity=".9"/></linearGradient>
+              </defs>
+              <path d="M0 20 L120 20 L210 100 L0 100Z" fill="url(#fa)"/>
+              <path d="M90 100 L180 20 L300 20 L300 100Z" fill="url(#fb)"/>
+            </svg>
+          </div>
+        </article>
+        <article class="float tile w2">
+          <span class="label">≋ 이퀄라이저</span>
+          <h3>내 귀에 맞춘 소리</h3>
+          <p>이퀄라이저와 프리셋, 곡마다 크기를 맞추는 음량 평준화.</p>
+          <div class="viz v-eq" aria-hidden="true"><i style="--h:62%"></i><i style="--h:78%"></i><i style="--h:55%"></i><i style="--h:40%"></i><i style="--h:48%"></i><i style="--h:66%"></i><i style="--h:84%"></i><i style="--h:70%"></i></div>
+        </article>
+        <article class="float tile w2">
+          <span class="label">▣ 미니플레이어</span>
+          <h3>작게, 늘 위에</h3>
+          <p>작업하면서도 곡을 넘기는 작은 창과 작업표시줄 버튼.</p>
+          <div class="viz" aria-hidden="true"><div class="v-mini"><div class="art" style="background: linear-gradient(135deg, #ff8a3d, #f062c0)"></div><div><b>Midnight Drive</b><span>Neon Coast</span></div><span class="play">❚❚</span></div></div>
+        </article>
+        <article class="float tile w3">
+          <span class="label">☆ 둘러보기</span>
+          <h3>오늘의 기분에 맞춰</h3>
+          <p>홈, 차트, 기분별 믹스, 아티스트 페이지. 비슷한 분위기로 섞는 스마트 셔플.</p>
+          <div class="viz v-moods" aria-hidden="true">
+            <span class="mood" style="background: radial-gradient(circle at 30% 30%, #ffc531, #8a6a10)">행복</span>
+            <span class="mood" style="background: radial-gradient(circle at 30% 30%, #22b8f0, #0d5370)">차분</span>
+            <span class="mood" style="background: radial-gradient(circle at 30% 30%, #ff4d6d, #7a1f30)">신남</span>
+            <span class="mood" style="background: radial-gradient(circle at 30% 30%, #2ecf8f, #12603f)">집중</span>
+            <span class="mood" style="background: radial-gradient(circle at 30% 30%, #f062c0, #6e2357)">K팝</span>
+          </div>
+        </article>
+        <article class="float tile w3">
+          <span class="label">▥ 청취 통계</span>
+          <h3>내가 들어온 음악</h3>
+          <p>많이 들은 곡과 아티스트, 시간대별 통계. 기록은 이 PC에만 남고, Last.fm 스크로블도 됩니다.</p>
+          <div class="viz" aria-hidden="true">
+            <svg viewBox="0 0 300 110" style="width:100%;height:110px">
+              <defs><linearGradient id="st" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff8a96"/><stop offset="1" stop-color="#d3002a"/></linearGradient></defs>
+              <g fill="url(#st)"><rect x="4" y="70" width="26" height="40" rx="6"/><rect x="40" y="52" width="26" height="58" rx="6"/><rect x="76" y="80" width="26" height="30" rx="6"/><rect x="112" y="36" width="26" height="74" rx="6"/><rect x="148" y="58" width="26" height="52" rx="6"/><rect x="184" y="18" width="26" height="92" rx="6"/><rect x="220" y="44" width="26" height="66" rx="6"/><rect x="256" y="64" width="26" height="46" rx="6"/></g>
+            </svg>
+          </div>
+        </article>
+      </div>
+      <div class="more">
+        <span class="chip"><b>☾</b>슬립 타이머</span>
+        <span class="chip"><b>⏰</b>아침 알람</span>
+        <span class="chip"><b>⏸</b>자리 비우면 멈춤</span>
+        <span class="chip"><b>📱</b>휴대폰 리모컨</span>
+        <span class="chip"><b>⇄</b>휴대폰에서 틀면 PC는 양보</span>
+        <span class="chip"><b>◉</b>OBS 위젯</span>
+        <span class="chip"><b>◈</b>Discord 상태 표시</span>
+        <span class="chip"><b>⌨</b>전역 단축키</span>
+        <span class="chip"><b>A</b>한국어 · English · 日本語 · 中文</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="blk" id="keys">
+    <div class="wrap">
+      <div class="head">
+        <span class="label">SHORTCUTS</span>
+        <h2>손은 키보드 위에 <em class="grad">그대로.</em></h2>
+        <p>입력창 밖에서 바로 동작합니다. 전역 단축키는 다른 프로그램을 쓰는 중에도 됩니다.</p>
+      </div>
+      <div class="keys">
+        <div class="float key"><div class="caps"><kbd>Space</kbd></div><span>재생 / 일시정지</span></div>
+        <div class="float key"><div class="caps"><kbd>Ctrl</kbd><kbd>→</kbd></div><span>다음 곡 (←는 이전 곡)</span></div>
+        <div class="float key"><div class="caps"><kbd>→</kbd><kbd>←</kbd></div><span>5초 앞으로 / 뒤로</span></div>
+        <div class="float key"><div class="caps"><kbd>Ctrl</kbd><kbd>↑</kbd><kbd>↓</kbd></div><span>음량 올리기 / 내리기</span></div>
+        <div class="float key"><div class="caps"><kbd>Ctrl</kbd><kbd>L</kbd></div><span>좋아요</span></div>
+        <div class="float key"><div class="caps"><kbd>M</kbd></div><span>음소거</span></div>
+        <div class="float key"><div class="caps"><kbd>F11</kbd></div><span>전체 화면</span></div>
+        <div class="float key hl"><div class="caps"><kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>P</kbd></div><span>어디서든 재생 / 정지</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="blk glow-b" id="install">
+    <div class="wrap">
+      <div class="head">
+        <span class="label">INSTALL</span>
+        <h2>설치 파일 하나로 <em class="grad">끝.</em></h2>
+        <p>따로 깔아야 할 프로그램은 없습니다. 업데이트는 새 설치 파일을 실행하면 설정과 로그인을 그대로 둔 채 덮어씁니다.</p>
+      </div>
+      <ol class="steps">
+        <li class="float"><h3>설치 파일 실행</h3><p><code>Tide-Setup.exe</code>를 엽니다. Windows가 “PC 보호” 창을 띄우면 추가 정보 → 실행을 누릅니다. 서명되지 않은 개인 앱이라 나오는 안내입니다.</p></li>
+        <li class="float"><h3>이용약관 동의</h3><p>처음 한 번, 이용약관과 개인정보 안내를 읽고 동의합니다.</p></li>
+        <li class="float"><h3>Google 로그인</h3><p>Google 공식 로그인 창에서 YouTube Music 계정으로 로그인하면 바로 홈이 열립니다.</p></li>
+      </ol>
+      <div class="band">
+        <svg class="waves" aria-hidden="true"><use href="#waves"/></svg>
+        <h2>내 YouTube Music을<br><em class="grad">더 가볍고, 더 깊게.</em></h2>
+        <a class="cta" href="#install" id="dl2">⬇ Windows 무료 다운로드 <small>v0.5</small></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="blk" style="padding-top: 40px">
+    <div class="wrap">
+      <div class="head">
+        <span class="label">TRUST</span>
+        <h2>계정과 기록은 이렇게 다룹니다</h2>
+      </div>
+      <div class="trust">
+        <div class="float"><h3>비밀번호는 Tide가 보지 않습니다</h3><p>로그인은 Google 페이지에서 직접 하고, Tide는 로그인된 상태만 이어받습니다.</p></div>
+        <div class="float"><h3>통계는 내 PC에만</h3><p>청취 기록과 통계는 외부로 보내지 않습니다. 사용 현황을 몰래 보내는 신호도 없습니다.</p></div>
+        <div class="float"><h3>요청은 아껴서</h3><p>한 번 연 화면은 잠시 기억해 두고 다시 묻지 않아, 빠르고 계정에도 부담이 적습니다.</p></div>
+        <div class="float"><h3>광고</h3><p>YouTube Premium이 아니면 광고가 나올 수 있고, 그때는 직접 건너뛰면 됩니다.</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="mark" href="#top" aria-label="Tide 처음으로"><svg aria-hidden="true"><use href="#icon"/></svg>Tide</a>
+    <p>Tide 는 Google · YouTube 와 제휴하지 않은 개인 프로젝트입니다. YouTube Music 은 Google LLC 의 상표입니다.</p>
+  </div>
+</footer>
+
+<script>
+// 공개 다운로드 주소가 생기면 여기에 넣으면 두 버튼이 바로 연결됨
+const DOWNLOAD_URL = 'https://github.com/stellkr/tide/releases/latest/download/Tide-Setup.exe'
+;(() => {
+  if (DOWNLOAD_URL) {
+    for (const id of ['dl', 'dl2']) { const a = document.getElementById(id); a.href = DOWNLOAD_URL; a.target = '_blank'; a.rel = 'noopener' }
+    document.getElementById('dl-note').hidden = true
+  }
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
+  // 떠 있는 가사 카드: 한 줄씩 넘어감 (가사는 예시)
+  const L = ['파도 위로 번지는 빛처럼', '오늘 밤도 너에게 닿기를', '조용히 흘러가는 이 노래', '잔잔한 물결 위에 남겨진', '우리의 작은 멜로디']
+  const box = document.getElementById('lyric')
+  let i = 1
+  setInterval(() => {
+    i = (i + 1) % L.length
+    const ps = box.querySelectorAll('p')
+    ps[0].textContent = L[(i + L.length - 1) % L.length]
+    ps[1].textContent = L[i]
+    ps[2].textContent = L[(i + 1) % L.length]
+  }, 2800)
+  // 앱 화면 재생 바 진행
+  const bar = document.getElementById('mprog')
+  const t0 = performance.now()
+  const tick = (now) => { bar.style.width = (20 + ((now - t0) / 600) % 80) + '%'; requestAnimationFrame(tick) }
+  requestAnimationFrame(tick)
+})()
+</script>
+
+</body>
+</html>
