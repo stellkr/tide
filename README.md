@@ -2,7 +2,7 @@
 
 Windows용 YouTube Music 데스크톱 플레이어.
 
-- 홈페이지: https://stellkr.github.io/tide/
+- 홈페이지: https://tide.stellkr.xyz/
 - 다운로드: [최신 설치 파일](https://github.com/stellkr/tide/releases/latest/download/Tide-Setup.exe) · [모든 버전](https://github.com/stellkr/tide/releases)
 
 이 저장소에는 홈페이지와 설치 파일만 있습니다.
